@@ -15,8 +15,21 @@ namespace CompassCore.Model
         private readonly Dictionary<VertexRef, Dictionary<string, object>> _propsForVertices = 
             new Dictionary<VertexRef, Dictionary<string, object>>();
 
+        private readonly Dictionary<string, Dictionary<object, List<VertexRef>>> _propertyIndexes = new Dictionary<string, Dictionary<object, List<VertexRef>>>();
+
+        private readonly List<string> KeysToIndex = new List<string>() { Keys.Name, Keys.Type };
+
         private readonly Dictionary<VertexRef, Dictionary<string, List<VertexRef>>> _edgesFromVertex = new Dictionary<VertexRef, Dictionary<string, List<VertexRef>>>();
 
+
+        public GraphSpace()
+        {
+            //init property indexes
+            foreach(var key in KeysToIndex)
+            {
+                _propertyIndexes.Add(key, new Dictionary<object, List<VertexRef>>());
+            }
+        }
 
         public VertexRef AddOrUpdateVertex(VertexDefinition node)
         {
@@ -74,11 +87,6 @@ namespace CompassCore.Model
             return GetVertex(_keyIndex[id]);
         }
 
-        public IEnumerable<Vertex> GetVerticesByFilter(Filter filter)
-        {
-            return null;
-        }
-
         private void SetProperty(VertexRef id, string key, object value)
         {
             if (!_propsForVertices.ContainsKey(id))
@@ -86,6 +94,29 @@ namespace CompassCore.Model
                 _propsForVertices.Add(id, new Dictionary<string, object>());
             }
             _propsForVertices[id][key] = value;
+
+            //check if indexing needed
+            if (KeysToIndex.Contains(key))
+            {
+                AddToIndex(key, value, id);
+            }
+        }
+
+        private void AddToIndex(string key, object value, VertexRef id)
+        {
+            var index = _propertyIndexes[key];
+            List<VertexRef> targetLinks;
+            if (!index.TryGetValue(value, out targetLinks))
+            {
+                targetLinks = new List<VertexRef>();
+                targetLinks.Add(id);
+                index.Add(value, targetLinks);
+                return;
+            }
+
+            if (targetLinks.Contains(id)) return;
+
+            targetLinks.Add(id);
         }
 
         private object GetProperty(VertexRef id, string key)

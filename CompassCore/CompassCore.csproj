@@ -103,7 +103,6 @@
     <Compile Include="Keys.cs" />
     <Compile Include="Model\EdgeDefinition.cs" />
     <Compile Include="Model\EdgeRef.cs" />
-    <Compile Include="Model\Filter.cs" />
     <Compile Include="Model\Internal\IdSeed.cs" />
     <Compile Include="Model\Internal\InternalVertex.cs" />
     <Compile Include="Model\Internal\UniqueIdDerivator.cs" />

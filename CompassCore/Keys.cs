@@ -11,5 +11,6 @@ namespace CompassCore
         public static string Name = "NAME";
         public static string Location = "LOCATION";
         public static string OriginalNode = "ONODE";
+        public static string Type = "TYPE";
     }
 }
