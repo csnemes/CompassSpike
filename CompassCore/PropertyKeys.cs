@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CompassCore
 {
-    public static class Keys
+    public static class PropertyKeys
     {
         public static string Name = "NAME";
         public static string Location = "LOCATION";

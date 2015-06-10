@@ -39,5 +39,11 @@ namespace CompassCore.Tests
         {
             var sp = SolutionParser.ParseSolution(@"c:\Temp\TibcoEAISimulator\src\TibcoEaiSimulator.sln");
         }
+
+        [Test, Explicit]
+        public void RunSolutionParser2()
+        {
+            var sp = SolutionParser.ParseSolution(@"C:\GitHub\testforlabelingpackage\TestConsoleApplication1.sln");
+        }
     }
 }

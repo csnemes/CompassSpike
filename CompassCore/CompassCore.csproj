@@ -100,7 +100,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Keys.cs" />
+    <Compile Include="EdgeKeys.cs" />
+    <Compile Include="PropertyKeys.cs" />
     <Compile Include="Model\EdgeDefinition.cs" />
     <Compile Include="Model\EdgeRef.cs" />
     <Compile Include="Model\Internal\IdSeed.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="Parsing\CustomWalker.cs" />
     <Compile Include="Parsing\SolutionParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Model\VertexType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
