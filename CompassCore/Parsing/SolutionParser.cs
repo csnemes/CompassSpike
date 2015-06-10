@@ -50,7 +50,7 @@ namespace CompassCore.Parsing
 
                         var rootNode = await tree.GetRootAsync();
 
-                        var walker = new CustomWalker(_nodeSpace, semanticModel);
+                        var walker = new CustomWalker(result, semanticModel);
                         walker.Visit(rootNode);
                     }
                 }
