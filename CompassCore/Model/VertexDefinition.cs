@@ -25,9 +25,9 @@ namespace CompassCore.Model
             throw new NotImplementedException();
         }
 
-        public static VertexDefinition FromSemanticNode(INamedTypeSymbol namedTypeSymbol)
+        public static VertexDefinition FromSemanticNode(ISymbol symbol)
         {
-            var id = UniqueIdDerivator.Instance.GetUniqueId(namedTypeSymbol);
+            var id = UniqueIdDerivator.Instance.GetUniqueId(symbol);
             return new VertexDefinition(id);
         }
 
@@ -52,7 +52,4 @@ namespace CompassCore.Model
             get { return _props; }
         }
     }
-
-
-
 }

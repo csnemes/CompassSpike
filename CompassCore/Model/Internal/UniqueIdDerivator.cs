@@ -22,17 +22,26 @@ namespace CompassCore.Model.Internal
             throw new ApplicationException(String.Format("Unknown node type {0}", node.GetType()));
         }
 
-        public string GetUniqueId(ITypeSymbol symbol)
+        public string GetUniqueId(ISymbol symbol)
         {
             if (symbol is INamedTypeSymbol)
             {
                 return GetUniqueId((INamedTypeSymbol)symbol);
+            }
+            if (symbol is INamespaceSymbol)
+            {
+                return GetUniqueId((INamespaceSymbol)symbol);
             }
 
             throw new ApplicationException(String.Format("Unknown symbol type {0}", symbol.GetType()));
         }
 
         private string GetUniqueId(INamedTypeSymbol symbol)
+        {
+            return symbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+        }
+
+        private string GetUniqueId(INamespaceSymbol symbol)
         {
             return symbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
         }
