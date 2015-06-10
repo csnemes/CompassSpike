@@ -12,7 +12,7 @@ namespace CompassCore.Model
 
         private readonly Dictionary<string, Dictionary<object, List<VertexRef>>> _propertyIndexes = new Dictionary<string, Dictionary<object, List<VertexRef>>>();
 
-        private readonly List<string> KeysToIndex = new List<string>() { Keys.Name, Keys.Type };
+        private readonly List<string> KeysToIndex = new List<string>() { PropertyKeys.Name, PropertyKeys.Type };
 
         private readonly Dictionary<VertexRef, Dictionary<string, List<VertexRef>>> _edgesFromVertex = new Dictionary<VertexRef, Dictionary<string, List<VertexRef>>>();
 
