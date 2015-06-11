@@ -46,12 +46,7 @@ namespace CompassCore.Model
 
         public Vertex GetVertex(VertexRef vRef)
         {
-            Dictionary<string, object> props;
-            if (_propsForVertices.TryGetValue(vRef, out props))
-            {
-                return new Vertex(props);
-            }
-            return null;
+            return new Vertex(this, vRef);
         }
 
         public void AddOrUpdateEdge(EdgeDefinition edgeDefinition)
@@ -80,6 +75,39 @@ namespace CompassCore.Model
         {
             if (!_keyIndex.ContainsKey(id)) return null;
             return GetVertex(_keyIndex[id]);
+        }
+
+        public IEnumerable<Vertex> GetVerticesByProperty(string key, object valueSought)
+        {
+            Dictionary<object, List<VertexRef>> index;
+            if (!_propertyIndexes.TryGetValue(key, out index))
+            {
+                //do slow search
+                foreach (var singleVertex in _propsForVertices)
+                {
+                    object value;
+                    if (singleVertex.Value.TryGetValue(key, out value))
+                    {
+                        if (object.Equals(value, valueSought))
+                        {
+                            yield return GetVertex(singleVertex.Key);
+                            continue;
+                        }
+                    }
+                }
+            }
+
+            //fast search on index
+            List<VertexRef> results;
+            if (index.TryGetValue(valueSought, out results))
+            {
+                foreach (var result in results)
+                {
+                    yield return GetVertex(result);
+                }
+            }
+
+            yield break;
         }
 
         private void SetProperty(VertexRef id, string key, object value)
@@ -128,7 +156,7 @@ namespace CompassCore.Model
             return null;
         }
 
-        private Dictionary<string, object> GetProperties(VertexRef id)
+        internal Dictionary<string, object> GetProperties(VertexRef id)
         {
             if (_propsForVertices.ContainsKey(id))
             {
@@ -136,6 +164,16 @@ namespace CompassCore.Model
             }
 
             return null;
+        }
+
+        internal Dictionary<string, List<VertexRef>> GetOutgoingEdgesFrom(VertexRef node)
+        {
+            Dictionary<string, List<VertexRef>> result;
+            if (_edgesFromVertex.TryGetValue(node, out result))
+            {
+                return result;
+            }
+            return new Dictionary<string, List<VertexRef>>();
         }
     }
 }
