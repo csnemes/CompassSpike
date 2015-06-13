@@ -1,6 +1,8 @@
 ﻿using CompassCore.Model;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -23,6 +25,11 @@ namespace CompassCore.Parsing
             var result = new SolutionParser(solution.Result);
             result.RunParsing(); //TODO async
             return result;
+        }
+
+        public IEnumerable<Vertex> GetVerticiesOfType(VertexType type)
+        {
+            return _nodeSpace.GetVerticesByProperty(PropertyKeys.Type, type);
         }
 
         private void RunParsing()
