@@ -21,8 +21,8 @@ namespace CompassCore.Parsing
         public static SolutionParser ParseSolution(string path)
         {
             var ws = MSBuildWorkspace.Create();
-            var solution = ws.OpenSolutionAsync(path);
-            var result = new SolutionParser(solution.Result);
+            var solution = ws.OpenSolutionAsync(path).Result;
+            var result = new SolutionParser(solution);
             result.RunParsing(); //TODO async
             return result;
         }
