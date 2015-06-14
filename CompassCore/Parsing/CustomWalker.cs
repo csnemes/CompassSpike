@@ -32,7 +32,8 @@ namespace CompassCore.Parsing
             var classVertex = _nodeSpace.AddOrUpdateVertex(classVertexDef);
 
             var parentClassVertexDef = VertexDefinition.FromSemanticNode(symbol.BaseType)
-                .AddProp(PropertyKeys.Name, symbol.BaseType.Name);
+                .AddProp(PropertyKeys.Name, symbol.BaseType.Name)
+                .AddProp(PropertyKeys.Type, VertexType.Class);
 
             var parentClassVertex =_nodeSpace.AddOrUpdateVertex(parentClassVertexDef);
 

@@ -17,7 +17,7 @@ namespace CompassCore.Model
             _vertexRef = vertexRef;
         }
 
-        protected Dictionary<string, object> Props
+        public Dictionary<string, object> Props
         {
             get
             {

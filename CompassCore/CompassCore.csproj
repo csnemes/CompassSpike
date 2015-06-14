@@ -105,7 +105,6 @@
     <Compile Include="Model\EdgeDefinition.cs" />
     <Compile Include="Model\EdgeRef.cs" />
     <Compile Include="Model\Internal\IdSeed.cs" />
-    <Compile Include="Model\Internal\InternalVertex.cs" />
     <Compile Include="Model\Internal\UniqueIdDerivator.cs" />
     <Compile Include="Model\Vertex.cs" />
     <Compile Include="Model\VertexDefinition.cs" />

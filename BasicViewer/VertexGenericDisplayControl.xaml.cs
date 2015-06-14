@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using CompassCore.Model;
+using CompassCore;
 
 namespace BasicViewer
 {
@@ -32,6 +33,19 @@ namespace BasicViewer
             foreach (var vertex in vertices)
             {
                 tree.Items.Add(CreateVertexNode(vertex));
+            }
+        }
+
+        private void TreeViewItemSelected(object sender, RoutedEventArgs e)
+        {
+            TreeViewItem tvi = e.OriginalSource as TreeViewItem;
+            if (tvi != null)
+            {
+                if (tvi.Tag.GetType() == typeof(Vertex))
+                {
+                    var vertex = (Vertex)tvi.Tag;
+                    list.ItemsSource = vertex.Props;
+                }
             }
         }
 
@@ -79,11 +93,71 @@ namespace BasicViewer
         private TreeViewItem CreateVertexNode(Vertex vertex)
         {
             var item = new TreeViewItem();
-            item.Header = vertex.Id;
+            item.ItemTemplate = (DataTemplate)this.FindResource("vertexTemplate");
+            item.HeaderTemplate = (DataTemplate)this.FindResource("vertexTemplate");
+            item.Header = new VertexInfo(vertex);
             item.Expanded += new RoutedEventHandler(TreeViewItemExpanded);
+            item.Selected += new RoutedEventHandler(TreeViewItemSelected);
             item.Tag = vertex;
             return item;
         }
+
+        public class VertexInfo
+        {
+            private Vertex _vertex;
+
+            public VertexInfo(Vertex vertex)
+            {
+                _vertex = vertex;
+            }
+
+            public string Id
+            {
+                get
+                {
+                    return _vertex.Id;
+                }
+            }
+
+
+            public string Name
+            {
+                get
+                {
+                    return GetValueOrDefault<string>(PropertyKeys.Name, Id);
+                }
+            }
+
+            public string Type
+            {
+                get
+                {
+                    return _vertex.GetByKey<VertexType>(PropertyKeys.Type).ToString();
+                }
+            }
+
+            public Dictionary<string, object> Props
+            {
+                get
+                {
+                    return _vertex.Props;
+                }
+            }
+
+            private T GetValueOrDefault<T>(string key, T defaultValue)
+            {
+                if (_vertex.HasKey(key))
+                {
+                    return _vertex.GetByKey<T>(key);
+                }
+                else
+                {
+                    return defaultValue;
+                }
+            }
+
+        }
     }
 }
+
 

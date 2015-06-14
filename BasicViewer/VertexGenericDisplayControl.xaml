@@ -6,7 +6,25 @@
              xmlns:local="clr-namespace:BasicViewer"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-        <TreeView x:Name="tree" Margin="5" />
+    <UserControl.Resources>
+        <DataTemplate x:Key="vertexTemplate" DataType="VertexInfo">
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Path=Type, StringFormat={}[{0}]}" />
+                    <TextBlock Text="{Binding Path=Name}" Margin="5,0,0,0" />
+                    <TextBlock Text="{Binding Path=Id, StringFormat={}{{Id:{0}}}}" Margin="5,0,0,0" />
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+    <Grid Margin="4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="4*" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TreeView Grid.Row="0" x:Name="tree" />
+        <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" />
+        <ListBox Grid.Row="2" x:Name="list" />
     </Grid>
 </UserControl>
