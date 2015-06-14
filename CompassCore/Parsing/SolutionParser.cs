@@ -40,9 +40,23 @@ namespace CompassCore.Parsing
         private async Task<GraphSpace> DoParse()
         {
             var result = new GraphSpace();
+            var solutionVertex = result.AddOrUpdateVertex(VertexDefinition.Create(_solution.Id.Id.ToString())
+                .AddProp(PropertyKeys.Type, VertexType.Solution)
+                .AddProp(PropertyKeys.Name, _solution.FilePath));
+
             foreach (var project in _solution.Projects)
             {
                 Debug.Print("Parsing project: {0}", project.Name);
+                var projectVertex = result.AddOrUpdateVertex(VertexDefinition.Create(project.Id.Id.ToString())
+                .AddProp(PropertyKeys.Type, VertexType.Project)
+                .AddProp(PropertyKeys.Name, project.Name));
+
+                result.AddOrUpdateEdge(EdgeDefinition.Create("CONSISTSOF")
+                    .FromVertex(solutionVertex).ToVertex(projectVertex));
+
+                result.AddOrUpdateEdge(EdgeDefinition.Create("INCLUDEDIN")
+                    .FromVertex(projectVertex).ToVertex(solutionVertex));
+
                 foreach (var document in project.Documents)
                 {
                     Debug.Print("Parsing document: {0}", document.Name);
@@ -53,7 +67,7 @@ namespace CompassCore.Parsing
 
                         var rootNode = await tree.GetRootAsync();
 
-                        var walker = new CustomWalker(result, semanticModel);
+                        var walker = new CustomWalker(result, semanticModel, projectVertex);
                         walker.Visit(rootNode);
                     }
                 }

@@ -11,11 +11,13 @@ namespace CompassCore.Parsing
     {
         private readonly GraphSpace _nodeSpace;
         private readonly SemanticModel _semanticModel;
+        private readonly VertexRef _projectVertexRef;
 
-        public CustomWalker(GraphSpace nodeSpace, SemanticModel semanticModel)
+        public CustomWalker(GraphSpace nodeSpace, SemanticModel semanticModel, VertexRef projectVertexRef)
         {
             _nodeSpace = nodeSpace;
             _semanticModel = semanticModel;
+            _projectVertexRef = projectVertexRef;
         }
 
         public override void VisitClassDeclaration(ClassDeclarationSyntax node)
@@ -42,6 +44,10 @@ namespace CompassCore.Parsing
 
             AddInterfaceVertexesAndEdges(symbol, classVertex);
             AddNamespaceVertexesAndEdges(symbol, classVertex);
+
+            //add to project
+            _nodeSpace.AddOrUpdateEdge(EdgeDefinition.Create("CONTAINS").FromVertex(_projectVertexRef).ToVertex(classVertex));
+            _nodeSpace.AddOrUpdateEdge(EdgeDefinition.Create("DECLAREDIN").FromVertex(classVertex).ToVertex(_projectVertexRef));
 
             base.VisitClassDeclaration(node);
         }
@@ -104,6 +110,10 @@ namespace CompassCore.Parsing
 
                 _nodeSpace.AddOrUpdateEdge(EdgeDefinition.Create(EdgeKeys.Implementation).FromVertex(vertex).ToVertex(interfaceVertex));
                 _nodeSpace.AddOrUpdateEdge(EdgeDefinition.Create(EdgeKeys.Definition).FromVertex(interfaceVertex).ToVertex(vertex));
+
+                _nodeSpace.AddOrUpdateEdge(EdgeDefinition.Create("CONTAINS").FromVertex(_projectVertexRef).ToVertex(interfaceVertex));
+                _nodeSpace.AddOrUpdateEdge(EdgeDefinition.Create("DECLAREDIN").FromVertex(interfaceVertex).ToVertex(_projectVertexRef));
+
             }
         }
     }

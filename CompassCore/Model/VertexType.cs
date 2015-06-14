@@ -10,6 +10,8 @@ namespace CompassCore
     {
         Interface,
         Class,
-        NameSpace
+        NameSpace,
+        Project,
+        Solution
     }
 }

@@ -1,4 +1,5 @@
-﻿using CompassCore.Parsing;
+﻿using CompassCore;
+using CompassCore.Parsing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,10 +24,18 @@ namespace BasicViewer
     public partial class MainWindow : Window
     {
         private string _selectedFile;
+        private SolutionParser _parser;
 
         public MainWindow()
         {
             InitializeComponent();
+            this.Loaded += MainWindow_Loaded;
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            combo.ItemsSource = Enum.GetValues(typeof(VertexType)).Cast<VertexType>();
+            combo.SelectedItem = VertexType.Solution;
         }
 
         private void Select_Click(object sender, RoutedEventArgs e)
@@ -46,7 +55,7 @@ namespace BasicViewer
                 // Open document 
                 _selectedFile = dlg.FileName;
                 selectedFile.Text = _selectedFile;
-                DoRefresh();
+                RunParsing();
             }
         }
 
@@ -57,13 +66,19 @@ namespace BasicViewer
 
         private void DoRefresh()
         {
+            var items = _parser.GetVerticiesOfType((VertexType)combo.SelectedItem);
+            display.DisplayVertices(items);
+        }
+
+        private void RunParsing()
+        {
             var parsingTask = Task.Factory.StartNew((inp) => SolutionParser.ParseSolution(_selectedFile), null,
                 CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Default);
 
             parsingTask.ContinueWith((prevTask, state) =>
                 {
-                    var items = prevTask.Result.GetVerticiesOfType(CompassCore.VertexType.Class);
-                    display.DisplayVertices(items);
+                    _parser = prevTask.Result;
+                    DoRefresh();
                 }, 
                 null, 
                 CancellationToken.None, 
